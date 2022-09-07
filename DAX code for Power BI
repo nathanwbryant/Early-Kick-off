@@ -1,128 +1,165 @@
-First, I had to define some measures that would be key to my investigation.	
-		
-Here I am finding the number of wins achieved by underdogs	
-		
-Counting all the rows where a team had a higher goal count and higher pre-match odds.	
-		
-	Underdog Wins = 	
-		
-	VAR HomeUnderdogWin =	
-	CALCULATE(	
-	    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),	
-	    footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],	
-	    footystats_prem_since_odds[odds_ft_home_team_win] > footystats_prem_since_odds[odds_ft_away_team_win]	
-	)    	
-	VAR AwayUnderdogWin = 	
-	CALCULATE(	
-	    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),	
-	    footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],	
-	    footystats_prem_since_odds[odds_ft_home_team_win] < footystats_prem_since_odds[odds_ft_away_team_win]	
-	)    	
-	VAR Result = HomeUnderdogWin + AwayUnderdogWin	
-	Return Result	
-		
-Also, define and count the matches we consider as early kick-off.	
-This is Saturday matches at 12:30, but 11:30 must be included for time changes throughout	
-the year.	
-		
-		
-	Total Saturday early kick-off matches = 	
-	CALCULATE(COUNTA(footystats_prem_since_odds[Game Week]),	
-	    footystats_prem_since_odds[Weekday] = 6,	
-	    OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")	
-	)	
-		
-Now to combine the two	
-		
-	Total Saturday early kick off underdog wins = 	
-	VAR HomeUnderdogWin =	
-	CALCULATE(	
-	    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),	
-	    footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],	
-	    footystats_prem_since_odds[odds_ft_home_team_win] > footystats_prem_since_odds[odds_ft_away_team_win],	
-	    footystats_prem_since_odds[Weekday] = 6,	
-	    OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")	
-	)	
-	VAR AwayUnderdogWin = 	
-	CALCULATE(	
-	    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),	
-	    footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],	
-	    footystats_prem_since_odds[odds_ft_home_team_win] < footystats_prem_since_odds[odds_ft_away_team_win],footystats_prem_since_odds[Weekday] = 6,	
-	    OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")	
-	)	
-	VAR Result = HomeUnderdogWin + AwayUnderdogWin	
-	Return Result	
-		
+#First, I had to define some measures that would be key to my investigation.
 
-Now we do the same with matches that kick-off at any other time	
+#Here I am finding the number of wins achieved by underdogs
+
+#Counting all the rows where a team had a higher goal count and higher pre-match odds.
+
+#Underdog Wins = 
+
+VAR HomeUnderdogWin =
+CALCULATE(
+    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),
+    footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],
+    footystats_prem_since_odds[odds_ft_home_team_win] > footystats_prem_since_odds[odds_ft_away_team_win]
+)    
+VAR AwayUnderdogWin = 
+CALCULATE(
+    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),
+    footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],
+    footystats_prem_since_odds[odds_ft_home_team_win] < footystats_prem_since_odds[odds_ft_away_team_win]
+)    
+VAR Result = HomeUnderdogWin + AwayUnderdogWin
+Return Result
+
+#Also, define and count the matches we consider as early kick-off.
+#This is Saturday matches at 12:30, but 11:30 must be included for time changes throughout
+#the year.
+
+
+Total Saturday early kick-off matches = 
+CALCULATE(COUNTA(footystats_prem_since_odds[Game Week]),
+    footystats_prem_since_odds[Weekday] = 6,
+    OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")
+)
+
+#Now to combine the two
+
+Total Saturday early kick off underdog wins = 
+VAR HomeUnderdogWin =
+CALCULATE(
+    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),
+    footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],
+    footystats_prem_since_odds[odds_ft_home_team_win] > footystats_prem_since_odds[odds_ft_away_team_win],
+    footystats_prem_since_odds[Weekday] = 6,
+    OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")
+)
+VAR AwayUnderdogWin = 
+CALCULATE(
+    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),
+    footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],
+    footystats_prem_since_odds[odds_ft_home_team_win] < footystats_prem_since_odds[odds_ft_away_team_win],footystats_prem_since_odds[Weekday] = 6,
+    OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")
+)
+VAR Result = HomeUnderdogWin + AwayUnderdogWin
+Return Result
+
+
+#Now we do the same with matches that kick-off at any other time
+
+
+Total NON Saturday early kick off underdog wins = 
+VAR saturdayHomeUnderdogWin =
+CALCULATE(
+    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),
+    footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],
+    footystats_prem_since_odds[odds_ft_home_team_win] > footystats_prem_since_odds[odds_ft_away_team_win],
+    footystats_prem_since_odds[Weekday] = 6,
+    AND(footystats_prem_since_odds[kickoff_time_gmt] <> "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] <> "11:30:00")
+)
+VAR otherHomeUnderdogWin =
+CALCULATE(
+    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),
+    footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],
+    footystats_prem_since_odds[odds_ft_home_team_win] > footystats_prem_since_odds[odds_ft_away_team_win],
+    footystats_prem_since_odds[Weekday] <> 6
+)
+VAR saturdayAwayUnderdogWin = 
+CALCULATE(
+    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),
+    footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],
+    footystats_prem_since_odds[odds_ft_home_team_win] < footystats_prem_since_odds[odds_ft_away_team_win],
+    footystats_prem_since_odds[Weekday] = 6,
+    AND(footystats_prem_since_odds[kickoff_time_gmt] <> "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] <> "11:30:00")
+)
+VAR otherAwayUnderdogWin = 
+CALCULATE(
+    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),
+    footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],
+    footystats_prem_since_odds[odds_ft_home_team_win] < footystats_prem_since_odds[odds_ft_away_team_win],
+    footystats_prem_since_odds[Weekday] <> 6
+)
+VAR Result = saturdayHomeUnderdogWin + otherHomeUnderdogWin + saturdayAwayUnderdogWin + otherAwayUnderdogWin 
+Return Result
+
 		
+#We introduce the concept of odds on favourites 		
 		
-	Total NON Saturday early kick off underdog wins = 	
-	VAR saturdayHomeUnderdogWin =	
-	CALCULATE(	
-	    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),	
-	    footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],	
-	    footystats_prem_since_odds[odds_ft_home_team_win] > footystats_prem_since_odds[odds_ft_away_team_win],	
-	    footystats_prem_since_odds[Weekday] = 6,	
-	    AND(footystats_prem_since_odds[kickoff_time_gmt] <> "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] <> "11:30:00")	
-	)	
-	VAR otherHomeUnderdogWin =	
-	CALCULATE(	
-	    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),	
-	    footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],	
-	    footystats_prem_since_odds[odds_ft_home_team_win] > footystats_prem_since_odds[odds_ft_away_team_win],	
-	    footystats_prem_since_odds[Weekday] <> 6	
-	)	
-	VAR saturdayAwayUnderdogWin = 	
-	CALCULATE(	
-	    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),	
-	    footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],	
-	    footystats_prem_since_odds[odds_ft_home_team_win] < footystats_prem_since_odds[odds_ft_away_team_win],	
-	    footystats_prem_since_odds[Weekday] = 6,	
-	    AND(footystats_prem_since_odds[kickoff_time_gmt] <> "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] <> "11:30:00")	
-	)	
-	VAR otherAwayUnderdogWin = 	
-	CALCULATE(	
-	    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),	
-	    footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],	
-	    footystats_prem_since_odds[odds_ft_home_team_win] < footystats_prem_since_odds[odds_ft_away_team_win],	
-	    footystats_prem_since_odds[Weekday] <> 6	
-	)	
-	VAR Result = saturdayHomeUnderdogWin + otherHomeUnderdogWin + saturdayAwayUnderdogWin + otherAwayUnderdogWin 	
-	Return Result	
+#It is mostly the same except for the odds filtering				
 		
+Underdog wins vs odds on fav EKO = 		
+VAR HomeUnderdogWin =		
+CALCULATE(		
+    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),		
+    // home team win //		
+        footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],		
+    // away team odds on //		
+        2 > footystats_prem_since_odds[odds_ft_away_team_win],		
+    // early kickoff //		
+        footystats_prem_since_odds[Weekday] = 6,		
+        OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")		
+)		
+VAR AwayUnderdogWin = 		
+CALCULATE(		
+    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),		
+    // away team win //		
+        footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],		
+    // home team odds on //		
+    footystats_prem_since_odds[odds_ft_home_team_win] < 2,		
+    // early kickoff //		
+    footystats_prem_since_odds[Weekday] = 6,		
+    OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")		
+)		
+VAR Result = HomeUnderdogWin + AwayUnderdogWin		
+Return Result						
 		
+#and again for the non early kick off		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-A slight difference with the same idea, rather than filtering comparing odds, we find odds less than 2. This		
- means they are 'odds-on' (a bookies implied chance of winning as greater than 50%)		
-		
+Underdog win vs odds on fav NON EKO = 		
+VAR saturdayHomeUnderdogWin =		
+CALCULATE(		
+    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),		
+    footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],		
+    2 > footystats_prem_since_odds[odds_ft_away_team_win],		
+    footystats_prem_since_odds[Weekday] = 6,		
+    AND(footystats_prem_since_odds[kickoff_time_gmt] <> "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] <> "11:30:00")		
+)		
+VAR otherHomeUnderdogWin =		
+CALCULATE(		
+    COUNTA(footystats_prem_since_odds[odds_ft_home_team_win]),		
+    footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],		
+    2 > footystats_prem_since_odds[odds_ft_away_team_win],		
+    footystats_prem_since_odds[Weekday] <> 6		
+)		
+VAR saturdayAwayUnderdogWin = 		
+CALCULATE(		
+    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),		
+    footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],		
+    footystats_prem_since_odds[odds_ft_home_team_win] < 2,		
+    footystats_prem_since_odds[Weekday] = 6,		
+    AND(footystats_prem_since_odds[kickoff_time_gmt] <> "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] <> "11:30:00")		
+)		
+VAR otherAwayUnderdogWin = 		
+CALCULATE(		
+    COUNTA(footystats_prem_since_odds[odds_ft_away_team_win]),		
+    footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],		
+    footystats_prem_since_odds[odds_ft_home_team_win] < 2,		
+    footystats_prem_since_odds[Weekday] <> 6		
+)		
+VAR Result = saturdayHomeUnderdogWin + otherHomeUnderdogWin + saturdayAwayUnderdogWin + otherAwayUnderdogWin 		
+Return Result		
+				
+#This time we focus on the wider picture, including win or draw for the underdog against the odds on favourite		
+				
 Odds on favourite fail to win in early kick off = 		
 VAR HomeUnderdogWin =		
 CALCULATE(		
@@ -170,11 +207,9 @@ CALCULATE(
 )		
 VAR Result = HomeUnderdogWin + AwayUnderdogWin + DrawAwayFav + DrawHomeFav		
 Return Result		
-		
-		
-and again for the non early kick-off games		
-		
-		
+				
+#and again for the non early kick-off games		
+				
 Odds on favourite fail to win in NON early kick off = 		
 VAR saturdayHomeUnderdogWin =		
 CALCULATE(		
@@ -241,4 +276,410 @@ CALCULATE(
 )		
 		
 VAR Result = saturdayHomeUnderdogWin + otherdaysHomeUnderdogWin + saturdayAwayUnderdogWin + otherdaysAwayUnderdogWin + saturdayDraw + otherdaysDraw 		
+Return Result		
+		
+#Looking deeper into the numbers we try to explain the slight bias by taking values for each underdog		
+		
+Average Odds of favourite fail to win in early kick off = 		
+VAR HomeUnderdogWin =		
+CALCULATE(		
+    SUM(footystats_prem_since_odds[odds_ft_home_team_win]),		
+    // home win //		
+        footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],		
+    // away team odds on //		
+        footystats_prem_since_odds[odds_ft_away_team_win] < 2,		
+    // saturday match eko //		
+        footystats_prem_since_odds[Weekday] = 6,		
+        OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")		
+)		
+VAR AwayUnderdogWin = 		
+CALCULATE(		
+    SUM(footystats_prem_since_odds[odds_ft_away_team_win]),		
+    // away team win //    		
+        footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],		
+    // home team odds on //    		
+        footystats_prem_since_odds[odds_ft_home_team_win] < 2,		
+    // saturday game eko //		
+        footystats_prem_since_odds[Weekday] = 6,		
+        OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")		
+)		
+VAR DrawHomeFav = 		
+CALCULATE(		
+    SUM(footystats_prem_since_odds[odds_ft_draw]),		
+    // draw //		
+        footystats_prem_since_odds[home_team_goal_count] = footystats_prem_since_odds[away_team_goal_count],		
+    // home team odds on //		
+        footystats_prem_since_odds[odds_ft_home_team_win] < 2,		
+    // saturday eko //    		
+        footystats_prem_since_odds[Weekday] = 6,		
+        OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")		
+)		
+VAR DrawAwayFav = 		
+CALCULATE(		
+    SUM(footystats_prem_since_odds[odds_ft_draw]),		
+    // draw //		
+        footystats_prem_since_odds[home_team_goal_count] = footystats_prem_since_odds[away_team_goal_count],		
+    // away team odds on //		
+        footystats_prem_since_odds[odds_ft_away_team_win] < 2,		
+    // saturday eko //    		
+        footystats_prem_since_odds[Weekday] = 6,		
+        OR(footystats_prem_since_odds[kickoff_time_gmt] = "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] = "11:30:00")		
+)		
+VAR Result = (HomeUnderdogWin + AwayUnderdogWin + DrawAwayFav + DrawHomeFav) / [Odds on favourite fail to win in early kick off]		
+Return Result		
+		
+		
+#and again for the non early kick off		
+		
+Average Odds of favourite fail to win in NON early kick off = 		
+VAR saturdayHomeUnderdogWin =		
+CALCULATE(		
+    SUM(footystats_prem_since_odds[odds_ft_home_team_win]),		
+    // home win //		
+        footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],		
+    // away team odds on //		
+        footystats_prem_since_odds[odds_ft_away_team_win] < 2,		
+    // saturday late kick off //		
+        footystats_prem_since_odds[Weekday] = 6,		
+        AND(footystats_prem_since_odds[kickoff_time_gmt] <> "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] <> "11:30:00")		
+)		
+VAR otherdaysHomeUnderdogWin =		
+CALCULATE(		
+    SUM(footystats_prem_since_odds[odds_ft_home_team_win]),		
+    // home win //		
+        footystats_prem_since_odds[home_team_goal_count] > footystats_prem_since_odds[away_team_goal_count],		
+    // away team odds on //		
+        footystats_prem_since_odds[odds_ft_away_team_win] < 2,		
+    // not played on saturday //		
+        footystats_prem_since_odds[Weekday] <> 6		
+)		
+VAR saturdayAwayUnderdogWin = 		
+CALCULATE(		
+    SUM(footystats_prem_since_odds[odds_ft_away_team_win]),		
+    // away win //		
+        footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],		
+    // home team odds on //		
+        footystats_prem_since_odds[odds_ft_home_team_win] < 2,		
+    // saturday late kick off //		
+        footystats_prem_since_odds[Weekday] = 6,		
+        AND(footystats_prem_since_odds[kickoff_time_gmt] <> "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] <> "11:30:00")		
+)		
+VAR otherdaysAwayUnderdogWin = 		
+CALCULATE(		
+    SUM(footystats_prem_since_odds[odds_ft_away_team_win]),		
+    // away win //		
+        footystats_prem_since_odds[home_team_goal_count] < footystats_prem_since_odds[away_team_goal_count],		
+    // home team odds on //		
+        footystats_prem_since_odds[odds_ft_home_team_win] < 2,		
+    // not played on saturday //		
+        footystats_prem_since_odds[Weekday] <> 6		
+)		
+VAR saturdayDraw = 		
+CALCULATE(		
+    SUM(footystats_prem_since_odds[odds_ft_draw]),		
+    // draw //		
+        footystats_prem_since_odds[home_team_goal_count] = footystats_prem_since_odds[away_team_goal_count],		
+    // either team odds on //		
+        OR(footystats_prem_since_odds[odds_ft_home_team_win] < 2, footystats_prem_since_odds[odds_ft_away_team_win] < 2),		
+    // saturday late kick off //		
+        footystats_prem_since_odds[Weekday] = 6,		
+    AND(footystats_prem_since_odds[kickoff_time_gmt] <> "12:30:00", footystats_prem_since_odds[kickoff_time_gmt] <> "11:30:00")		
+)		
+VAR otherdaysDraw = 		
+CALCULATE(		
+    SUM(footystats_prem_since_odds[odds_ft_draw]),		
+    // draw //		
+        footystats_prem_since_odds[home_team_goal_count] = footystats_prem_since_odds[away_team_goal_count],		
+    // either team odds on //		
+        OR(footystats_prem_since_odds[odds_ft_home_team_win] < 2, footystats_prem_since_odds[odds_ft_away_team_win] < 2),		
+    // not played on saturday //		
+        footystats_prem_since_odds[Weekday] <> 6		
+)		
+		
+VAR Result = (saturdayHomeUnderdogWin + otherdaysHomeUnderdogWin + saturdayAwayUnderdogWin + otherdaysAwayUnderdogWin + saturdayDraw + otherdaysDraw) / [Odds on favourite fail to win in NON early kick off]		
+Return Result		
+		
+#Taking a step in a different direction, we look not at the outcome but whats under the hood. We try to see if we can identify a pattern for overperformance using the xG (Expected goals) stat to explain 		
+		
+#We will compare the xG average of underdogs and favourites between early kick-offs and otherwise to see the difference, if any.		
+		
+#First the Favourite in early kick-offs		
+		
+average xg of fail to win (odds on) favs in eko = 		
+VAR saturdayHomeUnderdogWin =		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // home win //		
+        footy_stats_since_xg[home_team_goal_count] > footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // saturday early kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        OR(footy_stats_since_xg[kickoff_time_gmt] = "12:30", footy_stats_since_xg[kickoff_time_gmt] = "11:30")		
+)		
+VAR saturdayAwayUnderdogWin = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // away win //		
+        footy_stats_since_xg[home_team_goal_count] < footy_stats_since_xg[away_team_goal_count],		
+    // home team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // saturday early kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        OR(footy_stats_since_xg[kickoff_time_gmt] = "12:30", footy_stats_since_xg[kickoff_time_gmt] = "11:30")		
+)		
+VAR homefavsaturdayDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // home team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // saturday early kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        OR(footy_stats_since_xg[kickoff_time_gmt] = "12:30", footy_stats_since_xg[kickoff_time_gmt] = "11:30")		
+)		
+VAR awayfavsaturdayDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // saturday early kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        OR(footy_stats_since_xg[kickoff_time_gmt] = "12:30", footy_stats_since_xg[kickoff_time_gmt] = "11:30")		
+)		
+VAR Result = (saturdayHomeUnderdogWin + saturdayAwayUnderdogWin + homefavsaturdayDraw + awayfavsaturdayDraw) / ([(since xg) (Odds on) favourite fail to win in early kick off])		
+Return Result		
+		
+		
+#Now the favourite in non early kick-offs		
+		
+average xg of fail to win (odds on) favs NON eko = 		
+VAR saturdayHomeUnderdogWin =		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // home win //		
+        footy_stats_since_xg[home_team_goal_count] > footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // saturday late kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        AND(footy_stats_since_xg[kickoff_time_gmt] <> "12:30", footy_stats_since_xg[kickoff_time_gmt] <> "11:30")		
+)		
+VAR otherdaysHomeUnderdogWin =		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // home win //		
+        footy_stats_since_xg[home_team_goal_count] > footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // not played on saturday //		
+        footy_stats_since_xg[Weekday] <> 6		
+)		
+VAR saturdayAwayUnderdogWin = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // away win //		
+        footy_stats_since_xg[home_team_goal_count] < footy_stats_since_xg[away_team_goal_count],		
+    // home team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // saturday late kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        AND(footy_stats_since_xg[kickoff_time_gmt] <> "12:30", footy_stats_since_xg[kickoff_time_gmt] <> "11:30")		
+)		
+VAR otherdaysAwayUnderdogWin = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // away win //		
+        footy_stats_since_xg[home_team_goal_count] < footy_stats_since_xg[away_team_goal_count],		
+    // home team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // not played on saturday //		
+        footy_stats_since_xg[Weekday] <> 6		
+)		
+VAR homefavsaturdayDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // home team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // saturday late kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+    AND(footy_stats_since_xg[kickoff_time_gmt] <> "12:30", footy_stats_since_xg[kickoff_time_gmt] <> "11:30")		
+)		
+VAR awayfavsaturdayDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // saturday late kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+    AND(footy_stats_since_xg[kickoff_time_gmt] <> "12:30", footy_stats_since_xg[kickoff_time_gmt] <> "11:30")		
+)		
+VAR homefavotherdaysDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // either team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // not played on saturday //		
+        footy_stats_since_xg[Weekday] <> 6		
+)		
+VAR awayfavotherdaysDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // not played on saturday //		
+        footy_stats_since_xg[Weekday] <> 6		
+)		
+VAR Result = (saturdayHomeUnderdogWin + otherdaysHomeUnderdogWin + saturdayAwayUnderdogWin + otherdaysAwayUnderdogWin + homefavsaturdayDraw + awayfavsaturdayDraw + homefavotherdaysDraw + awayfavotherdaysDraw) / ([(since xg) (Odds on) favourite fail to win in NON early kick off])		
+Return Result		
+		
+#Now the underdogs		
+		
+average xg of underdog (odds on) FTW in eko = 		
+VAR HomeUnderdogWin =		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // home win //		
+        footy_stats_since_xg[home_team_goal_count] > footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // saturday early kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        OR(footy_stats_since_xg[kickoff_time_gmt] = "12:30", footy_stats_since_xg[kickoff_time_gmt] = "11:30")		
+)		
+VAR AwayUnderdogWin = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // away win //		
+        footy_stats_since_xg[home_team_goal_count] < footy_stats_since_xg[away_team_goal_count],		
+    // home team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // saturday early kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        OR(footy_stats_since_xg[kickoff_time_gmt] = "12:30", footy_stats_since_xg[kickoff_time_gmt] = "11:30")		
+)		
+VAR homefavsaturdayDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // home team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // saturday early kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        OR(footy_stats_since_xg[kickoff_time_gmt] = "12:30", footy_stats_since_xg[kickoff_time_gmt] = "11:30")		
+)		
+VAR awayfavsaturdayDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // saturday early kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        OR(footy_stats_since_xg[kickoff_time_gmt] = "12:30", footy_stats_since_xg[kickoff_time_gmt] = "11:30")		
+)		
+VAR Result = (HomeUnderdogWin + AwayUnderdogWin + homefavsaturdayDraw + awayfavsaturdayDraw) / ([(since xg) (Odds on) favourite fail to win in early kick off])		
+Return Result 		
+		
+#Now the underdogs in non early kick-offs		
+		
+average xg of Underdogs FTW (odds on) favs NON EKO = 		
+VAR saturdayHomeUnderdogWin =		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // home win //		
+        footy_stats_since_xg[home_team_goal_count] > footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // saturday late kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        AND(footy_stats_since_xg[kickoff_time_gmt] <> "12:30", footy_stats_since_xg[kickoff_time_gmt] <> "11:30")		
+)		
+VAR otherdaysHomeUnderdogWin =		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // home win //		
+        footy_stats_since_xg[home_team_goal_count] > footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // not played on saturday //		
+        footy_stats_since_xg[Weekday] <> 6		
+)		
+VAR saturdayAwayUnderdogWin = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // away win //		
+        footy_stats_since_xg[home_team_goal_count] < footy_stats_since_xg[away_team_goal_count],		
+    // home team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // saturday late kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+        AND(footy_stats_since_xg[kickoff_time_gmt] <> "12:30", footy_stats_since_xg[kickoff_time_gmt] <> "11:30")		
+)		
+VAR otherdaysAwayUnderdogWin = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // away win //		
+        footy_stats_since_xg[home_team_goal_count] < footy_stats_since_xg[away_team_goal_count],		
+    // home team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // not played on saturday //		
+        footy_stats_since_xg[Weekday] <> 6		
+)		
+VAR homefavsaturdayDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // home team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // saturday late kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+    AND(footy_stats_since_xg[kickoff_time_gmt] <> "12:30", footy_stats_since_xg[kickoff_time_gmt] <> "11:30")		
+)		
+VAR awayfavsaturdayDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // saturday late kick off //		
+        footy_stats_since_xg[Weekday] = 6,		
+    AND(footy_stats_since_xg[kickoff_time_gmt] <> "12:30", footy_stats_since_xg[kickoff_time_gmt] <> "11:30")		
+)		
+VAR homefavotherdaysDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_b_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // either team odds on //		
+        footy_stats_since_xg[odds_ft_home_team_win] < 2,		
+    // not played on saturday //		
+        footy_stats_since_xg[Weekday] <> 6		
+)		
+VAR awayfavotherdaysDraw = 		
+CALCULATE(		
+    SUM(footy_stats_since_xg[team_a_xg]),		
+    // draw //		
+        footy_stats_since_xg[home_team_goal_count] = footy_stats_since_xg[away_team_goal_count],		
+    // away team odds on //		
+        footy_stats_since_xg[odds_ft_away_team_win] < 2,		
+    // not played on saturday //		
+        footy_stats_since_xg[Weekday] <> 6		
+)		
+VAR Result = (saturdayHomeUnderdogWin + otherdaysHomeUnderdogWin + saturdayAwayUnderdogWin + otherdaysAwayUnderdogWin + homefavsaturdayDraw + awayfavsaturdayDraw + homefavotherdaysDraw + awayfavotherdaysDraw) / ([(since xg) (Odds on) favourite fail to win in NON early kick off])		
 Return Result		
