@@ -27,7 +27,8 @@ The ratio is slightly closer here, with a small bias in early kick-off matches s
 
 We must consider that a bet will lose if the punter backs the favourite and a draw occurs also.
 
-This data includes all matches that we’re lost by the odds on favourite as before, as well as in the event of a draw
+This data includes all matches that we’re lost by the odds on favourite as before, as well as in the event of a draw.
+
 
 The odds on favourite is a team with odds of less than 2 (evens) to win the match. Odds of evens implies a 50% of happening, thus we are looking only at teams with implied odds of greater than 50%.
 
@@ -56,3 +57,7 @@ Here we can see that the favourite, on average, far outscored the underdog despi
 However, there seems to be a slight drop in performance in the early kick-off matches, while the underdogs were more consistent.
 
 ![image](https://user-images.githubusercontent.com/109412319/188963062-920aed6d-7061-4735-81c3-565f3fa8e610.png)
+
+## Conclusion
+
+We can see that there may be some truth behind the myth, that long term gamblers seem to be worse off when backing odds on favourites in the early kick-off. It would be smarter to stick to early kick-off teams matched slightly more evenly or not at all to maximise profits. However, when it comes to betting like this you can maximise profits by avoiding it altogether. If one aims to have fun and the prospect of losing before the majority of games begin, it would be best to avoid the early kick-off no matter what the odds.
