@@ -1,5 +1,7 @@
 # Early-Kick-off
 
+This is a data driven investigation into the gamblers myth - ‘never back the early kick-off’ using Power BI and Power Query.
+
 An accumulator bet is a bet with multiple matches, in this case deciding the result of a match all to happen, so whether one of the picks or all of them lose, the bet is a loser.
 
 A common accumulator is one that is some number of Premier League matches on a Saturday. Usually the first match is at 12:30pm, a few at 3pm and one more evening match.
